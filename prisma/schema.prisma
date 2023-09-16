@@ -11,6 +11,82 @@ datasource db {
 }
 
 model User {
-  id   String @id @default(uuid())
-  name String
+  id               String            @id @default(uuid())
+  name             String
+  email            String            @unique
+  password         String
+  role             RoleForUser       @default(customer)
+  contactNo        String
+  address          String
+  profileImg       String
+  reviewAndRatings ReviewAndRating[]
+  orders           Order[]
+
+  @@map("users")
+}
+
+model Category {
+  id    String @id @default(uuid())
+  title String
+  books Book[]
+
+  @@map("categories")
+}
+
+model Book {
+  id              String   @id @default(uuid())
+  title           String
+  author          String
+  price           Float
+  genre           String
+  publicationDate DateTime
+  categoryId      String
+
+  category         Category          @relation(fields: [categoryId], references: [id])
+  reviewAndRatings ReviewAndRating[]
+  orderedBooks     OrderedBook[]
+
+  @@map("books")
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+  userId String
+  bookId String
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  @@map("reviewAndRetings")
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  userId    String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+
+  user         User          @relation(fields: [userId], references: [id])
+  orderedBooks OrderedBook[]
+
+  @@map("orders")
+}
+
+model OrderedBook {
+  id       String @id @default(uuid())
+  orderId  String
+  bookId   String
+  quantity Int
+
+  order Order @relation(fields: [orderId], references: [id])
+  book  Book  @relation(fields: [bookId], references: [id])
+
+  @@map("orderedBooks")
+}
+
+enum RoleForUser {
+  admin
+  customer
 }
