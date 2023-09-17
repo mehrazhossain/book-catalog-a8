@@ -49,21 +49,23 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     },
     select: {
       id: true,
+      email: true,
+      role: true,
     },
   });
 
-  const userId = user?.id;
+  const { id, role } = user as User;
 
   // Create access token
   const accessToken = jwtHelpers.createToken(
-    { userId, email },
+    { id, role },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
   // Create refresh token
   const refreshToken = jwtHelpers.createToken(
-    { email },
+    { id, role },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
