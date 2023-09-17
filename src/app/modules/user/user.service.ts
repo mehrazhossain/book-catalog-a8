@@ -113,12 +113,41 @@ const getSingleUser = async (id: string): Promise<Partial<User> | null> => {
 const updateUser = async (
   id: string,
   payload: Partial<User>
-): Promise<User> => {
+): Promise<Partial<User> | null> => {
   const result = await prisma.user.update({
     where: {
       id,
     },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      password: false,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
     data: payload,
+  });
+  return result;
+};
+
+const deleteUser = async (id: string): Promise<Partial<User> | null> => {
+  const result = await prisma.user.delete({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      password: false,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
   });
   return result;
 };
@@ -129,4 +158,5 @@ export const UserService = {
   loginUser,
   getSingleUser,
   updateUser,
+  deleteUser,
 };

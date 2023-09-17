@@ -183,10 +183,54 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(httpStatus.UNAUTHORIZED).json({
+      success: false,
+      message: 'Missing authorization token',
+    });
+  }
+
+  const decodedToken = jwtHelpers.verifyToken(
+    token,
+    config.jwt.secret as Secret
+  );
+
+  const user: Partial<User> | null = await prisma.user.findUnique({
+    where: {
+      id: decodedToken.userId,
+    },
+    select: {
+      role: true,
+    },
+  });
+
+  if (user?.role === 'admin') {
+    const result = await UserService.deleteUser(id);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'User deleted successfully',
+      data: result,
+    });
+  } else {
+    sendResponse(res, {
+      success: false,
+      statusCode: httpStatus.FORBIDDEN,
+      message: 'Permission denied',
+    });
+  }
+});
+
 export const UserController = {
   createUser,
   getAllUsers,
   loginUser,
   getSingleUser,
   updateUser,
+  deleteUser,
 };
