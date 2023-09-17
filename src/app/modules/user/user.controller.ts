@@ -1,9 +1,6 @@
-import { User } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
-import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import catchAsync from '../../../shared/catchAsync';
 import prisma from '../../../shared/prisma';
 import sendResponse from '../../../shared/sendResponse';
@@ -57,173 +54,49 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(httpStatus.UNAUTHORIZED).json({
-      success: false,
-      message: 'Missing authorization token',
-    });
-  }
-
-  const decodedToken = jwtHelpers.verifyToken(
-    token,
-    config.jwt.secret as Secret
-  );
-
-  const user: Partial<User> | null = await prisma.user.findUnique({
-    where: {
-      email: decodedToken.email,
-    },
-    select: {
-      role: true,
-    },
+  const users = await UserService.getAllUsers();
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'All users retrieved successfully',
+    data: users,
   });
-
-  if (user?.role === 'admin') {
-    const users = await UserService.getAllUsers();
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'All users retrieved successfully',
-      data: users,
-    });
-  } else {
-    sendResponse(res, {
-      success: false,
-      statusCode: httpStatus.FORBIDDEN,
-      message: 'Permission denied',
-    });
-  }
 });
 
 const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(httpStatus.UNAUTHORIZED).json({
-      success: false,
-      message: 'Missing authorization token',
-    });
-  }
-
-  const decodedToken = jwtHelpers.verifyToken(
-    token,
-    config.jwt.secret as Secret
-  );
-
-  const user: Partial<User> | null = await prisma.user.findUnique({
-    where: {
-      id: decodedToken.userId,
-    },
-    select: {
-      role: true,
-    },
+  const result = await UserService.getSingleUser(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User fetched successfully',
+    data: result,
   });
-
-  if (user?.role === 'admin') {
-    const result = await UserService.getSingleUser(id);
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'User fetched successfully',
-      data: result,
-    });
-  } else {
-    sendResponse(res, {
-      success: false,
-      statusCode: httpStatus.FORBIDDEN,
-      message: 'Permission denied',
-    });
-  }
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(httpStatus.UNAUTHORIZED).json({
-      success: false,
-      message: 'Missing authorization token',
-    });
-  }
-
-  const decodedToken = jwtHelpers.verifyToken(
-    token,
-    config.jwt.secret as Secret
-  );
-
-  const user: Partial<User> | null = await prisma.user.findUnique({
-    where: {
-      id: decodedToken.userId,
-    },
-    select: {
-      role: true,
-    },
+  const result = await UserService.updateUser(id, req.body);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User updated successfully',
+    data: result,
   });
-
-  if (user?.role === 'admin') {
-    const result = await UserService.updateUser(id, req.body);
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'User updated successfully',
-      data: result,
-    });
-  } else {
-    sendResponse(res, {
-      success: false,
-      statusCode: httpStatus.FORBIDDEN,
-      message: 'Permission denied',
-    });
-  }
 });
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(httpStatus.UNAUTHORIZED).json({
-      success: false,
-      message: 'Missing authorization token',
-    });
-  }
-
-  const decodedToken = jwtHelpers.verifyToken(
-    token,
-    config.jwt.secret as Secret
-  );
-
-  const user: Partial<User> | null = await prisma.user.findUnique({
-    where: {
-      id: decodedToken.userId,
-    },
-    select: {
-      role: true,
-    },
+  const result = await UserService.deleteUser(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User deleted successfully',
+    data: result,
   });
-
-  if (user?.role === 'admin') {
-    const result = await UserService.deleteUser(id);
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'User deleted successfully',
-      data: result,
-    });
-  } else {
-    sendResponse(res, {
-      success: false,
-      statusCode: httpStatus.FORBIDDEN,
-      message: 'Permission denied',
-    });
-  }
 });
 
 export const UserController = {
