@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\projects\\book-catalog-a8\\logs\\winston\\errors\\.1e9cf18ecf8d312452f19d94ebdbd1e22c990446-audit.json",
+    "files": [
+        {
+            "date": 1696178528821,
+            "name": "C:\\projects\\book-catalog-a8\\logs\\winston\\errors\\phu-2023-01-10-22-error.log",
+            "hash": "bcb133e9f62c7ef2d1717afef8418a20e561ce9cd17479fa03ddc96612d96ccc"
+        },
+        {
+            "date": 1696179601485,
+            "name": "C:\\projects\\book-catalog-a8\\logs\\winston\\errors\\phu-2023-01-10-23-error.log",
+            "hash": "56e6c6bbb1205565f8f13ccb2b4d94a738cd1242fd8972ff435b6f391b34bca5"
+        }
+    ],
+    "hashType": "sha256"
+}
