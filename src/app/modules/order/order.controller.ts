@@ -13,7 +13,6 @@ import { orderFilter } from './order.constants';
 import { OrderService } from './order.service';
 
 const createOrder: RequestHandler = catchAsync(async (req, res) => {
-  //   const userId = req.user?.userId;
   const token = req.headers.authorization;
   const verifiedUser = jwtHelpers.verifyToken(
     token as string,
