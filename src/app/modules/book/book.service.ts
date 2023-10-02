@@ -84,7 +84,18 @@ const getAllBook = async (
   };
 };
 
+const getSingleBook = async (id: string): Promise<Partial<Book> | null> => {
+  const result = await prisma.book.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return result;
+};
+
 export const BookService = {
   createBook,
   getAllBook,
+  getSingleBook,
 };
