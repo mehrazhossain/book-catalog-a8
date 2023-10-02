@@ -116,10 +116,47 @@ const deleteBook = async (id: string): Promise<Partial<Book> | null> => {
   return result;
 };
 
+const getBooksByCategoryId = async (
+  categoryId: string,
+  options: IPaginationOptions
+): Promise<IGenericResponse<Book[]>> => {
+  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+
+  const whereConditions: Prisma.BookWhereInput = {
+    categoryId: categoryId,
+  };
+
+  const result = await prisma.book.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : {
+            price: 'desc',
+          },
+  });
+
+  const total = await prisma.book.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
 export const BookService = {
   createBook,
   getAllBook,
   getSingleBook,
   updateBook,
   deleteBook,
+  getBooksByCategoryId,
 };
