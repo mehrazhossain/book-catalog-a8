@@ -11,7 +11,11 @@ import {
   orderRelationalFields,
   orderRelationalFieldsMapper,
 } from './order.constants';
-import { IOrderFilter, IOrderReqData } from './order.interface';
+import {
+  IOrderFilter,
+  IOrderReqData,
+  WhereConditionType,
+} from './order.interface';
 
 const createOrder = async (
   userId: string,
@@ -131,7 +135,32 @@ const getAllOrders = async (
   };
 };
 
+const getOrderForSpecificCustomer = async (
+  id: string,
+  user: JwtPayload | null
+): Promise<Order | null> => {
+  const whereCondition: WhereConditionType = { id };
+
+  if (user?.role === ENUM_USER_ROLE.CUSTOMER) {
+    whereCondition.user = { id: user.userId };
+  }
+
+  const data = await prisma.order.findUnique({
+    where: whereCondition,
+    include: {
+      user: true,
+      orderedBooks: {
+        include: {
+          book: true,
+        },
+      },
+    },
+  });
+  return data;
+};
+
 export const OrderService = {
   createOrder,
   getAllOrders,
+  getOrderForSpecificCustomer,
 };

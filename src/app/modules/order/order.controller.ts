@@ -48,7 +48,23 @@ const getAllOrders: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+const getOrderForSpecificCustomer: RequestHandler = catchAsync(
+  async (req, res) => {
+    const id = req.params.orderId;
+    const user = req.user;
+    const result = await OrderService.getOrderForSpecificCustomer(id, user);
+
+    sendResponse<Order | null>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order data fetched successfully!',
+      data: result,
+    });
+  }
+);
+
 export const OrderControlller = {
   createOrder,
   getAllOrders,
+  getOrderForSpecificCustomer,
 };
