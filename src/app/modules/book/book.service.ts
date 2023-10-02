@@ -94,8 +94,22 @@ const getSingleBook = async (id: string): Promise<Partial<Book> | null> => {
   return result;
 };
 
+const updateBook = async (
+  id: string,
+  payload: Partial<Book>
+): Promise<Partial<Book> | null> => {
+  const result = await prisma.book.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
+
 export const BookService = {
   createBook,
   getAllBook,
   getSingleBook,
+  updateBook,
 };
