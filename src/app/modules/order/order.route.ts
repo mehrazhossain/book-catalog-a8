@@ -11,4 +11,6 @@ router.post(
   OrderControlller.createOrder
 );
 
+router.get('/', auth(ENUM_USER_ROLE.ADMIN), OrderControlller.getAllOrders);
+
 export const orderRoutes = router;
