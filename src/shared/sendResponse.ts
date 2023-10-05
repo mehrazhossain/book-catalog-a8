@@ -48,7 +48,7 @@ type IApiReponse<T> = {
   message?: string | null;
   meta?: {
     page: number;
-    size: number;
+    size?: number;
     total: number;
   };
   data?: T | null;

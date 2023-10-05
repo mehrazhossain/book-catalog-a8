@@ -19,7 +19,7 @@ const createOrder: RequestHandler = catchAsync(async (req, res) => {
     config.jwt.secret as Secret
   );
 
-  const { id: userId } = verifiedUser;
+  const { userId } = verifiedUser;
 
   const orderData = req.body;
   const result = await OrderService.createOrder(userId, orderData);
