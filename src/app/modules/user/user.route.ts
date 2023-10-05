@@ -5,9 +5,6 @@ import { UserController } from './user.controller';
 
 const router = express.Router();
 
-router.post('/auth/signup', UserController.createUser);
-router.post('/auth/signin', UserController.loginUser);
-
 router.get('/users', auth(ENUM_USER_ROLE.ADMIN), UserController.getAllUsers);
 
 router.get(
