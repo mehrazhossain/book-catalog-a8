@@ -15,7 +15,7 @@ const getUserProfile: RequestHandler = catchAsync(async (req, res) => {
     config.jwt.secret as Secret
   );
 
-  const { id: userId } = verifiedUser;
+  const { userId } = verifiedUser;
 
   const result = await ProfileService.getUserProfile(userId);
 
