@@ -2,7 +2,6 @@
   "name": "book-catalog-a8",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.ts",
   "engines": {
     "node": ">=16"
   },
