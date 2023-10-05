@@ -2,9 +2,7 @@
   "name": "book-catalog-a8",
   "version": "1.0.0",
   "description": "",
-  "engines": {
-    "node": ">=16"
-  },
+  "main": "src/server.ts",
   "scripts": {
     "start": "ts-node-dev --respawn --transpile-only src/server.ts",
     "lint:check": "eslint --ignore-path .eslintignore --ext .js,.ts .",
